@@ -1,0 +1,9 @@
+[09:13:51] [main/INFO]: Setting user: tobias
+[09:13:51] [main/INFO]: (Session ID is token:invalid:f51e48fe-8fff-4574-9e4e-5118b9d7f056)
+[09:13:52] [Client thread/INFO]: LWJGL Version: 2.9.0
+[09:13:53] [Client thread/INFO]: Reloading ResourceManager: Default
+[09:13:54] [Sound Library Loader/INFO]: Sound engine started
+[09:13:54] [Client thread/INFO]: Created: 512x256 textures/blocks-atlas
+[09:13:54] [Client thread/INFO]: Created: 256x256 textures/items-atlas
+[09:13:55] [MCO Availability Checker #1/ERROR]: Couldn't connect to Realms
+[09:14:00] [Client thread/INFO]: Stopping!
