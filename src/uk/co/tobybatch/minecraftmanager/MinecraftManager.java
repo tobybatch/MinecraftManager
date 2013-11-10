@@ -13,13 +13,13 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author tobias
  */
-public class MinecraftManager extends JPanel implements ActionListener {
+public class MinecraftManager extends JPanel implements ActionListener, DebugEnabled {
     
     public static final String VERSION = "1.7.2";
     protected JTextArea txtDebug;
@@ -65,19 +65,35 @@ public class MinecraftManager extends JPanel implements ActionListener {
         runMinecraft();
     }
     
-    protected void runMinecraft() {
-        File home = new File(System.getProperty("user.home"));
-        this.debug("Home space found at " + home);
+    protected File getAppData(File home) {
+        
+        String appdata = "";
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
+            appdata = File.separator + "AppData\\Roaming";
+            this.debug("Adding windows custom AppData path");
+        }
+        
         File versiondir = new File(
                 home,
-                File.separator + ".minecraft"
+                appdata
+                + File.separator + ".minecraft"
                 + File.separator + "versions"
                 + File.separator + VERSION
         );
+        
+        return versiondir;
+    }
+    
+    protected void runMinecraft() {
+        File home = new File(System.getProperty("user.home"));
+        this.debug("Home space found at " + home);
+        
+        File versiondir = this.getAppData(home);
         File natives = new File(versiondir, VERSION + "-natives");
         this.debug("Looking for natives at " + versiondir);
         
         if (!natives.exists() || !natives.isDirectory()) {
+            this.debug("No natives found");
             if (!this.install(versiondir, natives)) {
                 return;
             }
@@ -102,7 +118,7 @@ public class MinecraftManager extends JPanel implements ActionListener {
         while (!(frame instanceof Frame)) {
             frame = frame.getParent();
         };
-        Installer inst = new Installer((Frame)frame, natives);
+        Installer inst = new Installer((Frame)frame, natives, this);
         
         int x = frame.getX();
         int y = frame.getY();
@@ -118,7 +134,7 @@ public class MinecraftManager extends JPanel implements ActionListener {
         return inst.isSucess();
     }
    
-    protected void debug(String message) {
+    public void debug(String message) {
         String text = this.txtDebug.getText();
         this.txtDebug.setText(text + message + "\n");
     }

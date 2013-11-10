@@ -27,11 +27,12 @@ public class Installer extends javax.swing.JDialog implements Runnable{
     protected JLabel feedback;
     
     private File natives;
-    
+    private DebugEnabled debugger;
     private boolean sucess = false;
     
-    public Installer(Frame owner, File natives) {
+    public Installer(Frame owner, File natives, DebugEnabled debugger) {
         super(owner, "Set up Minecraft", true);
+        this.debugger = debugger;
         this.natives = natives;
         
         this.setLayout(new GridLayout(2, 1, 10, 10));
@@ -53,6 +54,7 @@ public class Installer extends javax.swing.JDialog implements Runnable{
 
     public void start() {
         this.thread = new Thread(this);
+        this.debugger.debug("Starting search for natives");
         this.thread.start();
     }
     
@@ -78,6 +80,7 @@ public class Installer extends javax.swing.JDialog implements Runnable{
     }
     
     protected void copy(File mcnatives, File natives) throws IOException {
+        this.debugger.debug("Copying natives from " + mcnatives.toString() + " to " + natives.toString());
         FileUtils.copyDirectory(mcnatives, natives);
         // return Files.copy(Paths.get(mcnatives.toString()), Paths.get(natives.toString()), REPLACE_EXISTING);
     }
@@ -97,16 +100,20 @@ public class Installer extends javax.swing.JDialog implements Runnable{
         while (this.thread == thisThread) {
             try {
                 nativesExist = this.checkForNatives(this.natives);
+                this.debugger.debug("Natives exists: " + nativesExist);
                 if (nativesExist ) {
                     this.thread = null;
+                    this.debugger.debug("Natives found!");
                     this.feedback.setText("<html>Natives exist, you can close minecraft and this window.</html>");
                 } else {
                     mcnatives = this.findMCNatives(dir);
                     if (mcnatives != null) {
                         try {
                             this.feedback.setText("<html>Copying files into place.</html>");
+                            this.debugger.debug("Copying files into place.");
                             this.copy(new File(dir, mcnatives.toString()), natives);
                             this.sucess = true;
+                            continue;
                         } catch (IOException ex) {
                             ex.printStackTrace();
                             Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,7 +121,9 @@ public class Installer extends javax.swing.JDialog implements Runnable{
                         }
                     }
                 }
+                this.debugger.debug("Sleeping 5s");
                 thisThread.sleep(5000);
+                this.debugger.debug("Awake again");
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, e);
