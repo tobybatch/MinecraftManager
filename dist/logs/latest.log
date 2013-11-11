@@ -1,0 +1,17 @@
+[22:04:30] [main/INFO]: Setting user: gggg
+[22:04:30] [main/INFO]: (Session ID is token:invalid:72dbccda-7a6b-4b53-b914-9f1a5bde708a)
+[22:04:30] [Client thread/INFO]: LWJGL Version: 2.9.0
+[22:04:30] [Client thread/ERROR]: Couldn't set icon
+javax.imageio.IIOException: Can't read input file!
+	at javax.imageio.ImageIO.read(Unknown Source) ~[?:1.7.0_45]
+	at azd.a(SourceFile:500) ~[1.7.2.jar:?]
+	at azd.Z(SourceFile:340) [1.7.2.jar:?]
+	at azd.e(SourceFile:689) [1.7.2.jar:?]
+	at net.minecraft.client.main.Main.main(SourceFile:103) [1.7.2.jar:?]
+[22:04:31] [Client thread/INFO]: Reloading ResourceManager: Default
+[22:04:31] [Sound Library Loader/INFO]: Sound engine started
+[22:04:31] [Client thread/INFO]: Created: 512x256 textures/blocks-atlas
+[22:04:32] [Client thread/INFO]: Created: 256x256 textures/items-atlas
+[22:04:33] [MCO Availability Checker #1/ERROR]: Couldn't connect to Realms
+[22:04:37] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:music.menu
+[22:04:39] [Client thread/INFO]: Stopping!
