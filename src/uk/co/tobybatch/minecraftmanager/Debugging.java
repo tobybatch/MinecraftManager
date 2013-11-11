@@ -19,10 +19,10 @@ public class Debugging {
         );
         File natives = new File(versiondir, MinecraftManager.VERSION + "-natives");
         
-        String cli = mm.getCli(home, versiondir, natives).replace(
-                "USERNAME", "tobias"
-        );
+//        String cli = mm.getCli(home, versiondir, natives).replace(
+//                "USERNAME", "tobias"
+//        );
         
-        System.out.println(cli);
+//        System.out.println(cli);
     }
 }

@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -30,6 +30,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
     protected static File config = null;
     protected static File appdata = null;
     protected static File version = null;
+    protected static File libraries = null;
     protected static File natives = null;
 
     private Thread thread = null;
@@ -44,7 +45,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         topLabel.setFont(new Font("Dialog", Font.BOLD, 18));
         top.add(topLabel, BorderLayout.NORTH);
         
-        JPanel runPanel = new JPanel(new BorderLayout());
+        JPanel runPanel = new JPanel(new BorderLayout(10, 10));
         runPanel.add(new JLabel("Run minecraft as:"), BorderLayout.WEST);
         this.runText = new JTextField();
         JButton runButton = new JButton("Run");
@@ -58,7 +59,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         
         JPanel bottomPanel = new JPanel(new BorderLayout());
         this.txtDebug = new JTextArea();
-        // txtDebug.setEnabled(false);
+        txtDebug.setLineWrap(true);
         bottomPanel.add(new JScrollPane(this.txtDebug), BorderLayout.CENTER);
         
         JPanel bottomWrapper = new JPanel(new BorderLayout(10,10));
@@ -110,15 +111,26 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
     public static File getVersionDir() {
         if (MinecraftManager.version == null) {
             MinecraftManager.version = new File(
-                MinecraftManager.getHome(),
-                MinecraftManager.getAppData()
-                + File.separator + ".minecraft"
+                MinecraftManager.getAppData(),
+                File.separator + ".minecraft"
                 + File.separator + "versions"
                 + File.separator + MinecraftManager.VERSION
             );
         }
 
         return MinecraftManager.version;
+    }
+
+    public static File getLibrariesDir() {
+        if (MinecraftManager.libraries == null) {
+            MinecraftManager.libraries = new File(
+                MinecraftManager.getAppData()
+                + File.separator + ".minecraft"
+                + File.separator + "libraries"
+            );
+        }
+
+        return MinecraftManager.libraries;
     }
 
     public static File getNativesDir() {
@@ -140,7 +152,9 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         File version = MinecraftManager.getVersionDir();
         this.debug("Versions dir found at " + version);
         File natives = MinecraftManager.getNativesDir();
-        this.debug("Looking for natives at " + version);
+        this.debug("Looking for natives at " + natives);
+        File libraries = MinecraftManager.getLibrariesDir();
+        this.debug("Looking for libraries at " + libraries);
         
         if (!natives.exists() || !natives.isDirectory()) {
             this.debug("No natives found");
@@ -198,22 +212,15 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         File version = MinecraftManager.getVersionDir();
         File natives = MinecraftManager.getNativesDir();
         
-        String OS = System.getProperty("os.name").toLowerCase();
-        
-        String jarpath = this.walk(
-                new File(home, ".minecraft" + File.separator + "libraries")
-        );
-        jarpath += File.pathSeparator + new File(
-                home,
-                ".minecraft"
-                        + File.separator + "versions/"
-                        + VERSION
-                        + File.separator + VERSION + ".jar"
-        );
+        String jarpath = 
+            this.walk(MinecraftManager.getLibrariesDir()).toString()
+            + File.pathSeparator 
+            + MinecraftManager.getVersionDir().toString()
+            + File.separator + VERSION + ".jar";
         this.debug(jarpath);
                 
         return System.getProperty("java.home") 
-                + "/bin/java "
+                + File.separator + "bin" + File.separator + "java "
                 + "-Xmx1G "
                 + "-Djava.library.path=" + natives.toString() + " "
                 + "-cp " + jarpath

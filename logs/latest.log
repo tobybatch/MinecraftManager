@@ -1,9 +1,56 @@
-[09:13:51] [main/INFO]: Setting user: tobias
-[09:13:51] [main/INFO]: (Session ID is token:invalid:f51e48fe-8fff-4574-9e4e-5118b9d7f056)
-[09:13:52] [Client thread/INFO]: LWJGL Version: 2.9.0
-[09:13:53] [Client thread/INFO]: Reloading ResourceManager: Default
-[09:13:54] [Sound Library Loader/INFO]: Sound engine started
-[09:13:54] [Client thread/INFO]: Created: 512x256 textures/blocks-atlas
-[09:13:54] [Client thread/INFO]: Created: 256x256 textures/items-atlas
-[09:13:55] [MCO Availability Checker #1/ERROR]: Couldn't connect to Realms
-[09:14:00] [Client thread/INFO]: Stopping!
+[21:57:19] [main/INFO]: Setting user: vcvxcvxcv
+[21:57:20] [main/INFO]: (Session ID is token:invalid:9b7a6ced-a474-46a5-a7f1-30ad9d080089)
+[21:57:21] [Client thread/INFO]: LWJGL Version: 2.9.0
+[21:57:21] [Client thread/ERROR]: Couldn't set icon
+javax.imageio.IIOException: Can't read input file!
+	at javax.imageio.ImageIO.read(ImageIO.java:1301) ~[?:1.7.0_45]
+	at azd.a(SourceFile:500) ~[1.7.2.jar:?]
+	at azd.Z(SourceFile:340) [1.7.2.jar:?]
+	at azd.e(SourceFile:689) [1.7.2.jar:?]
+	at net.minecraft.client.main.Main.main(SourceFile:103) [1.7.2.jar:?]
+[21:57:23] [Client thread/INFO]: Reloading ResourceManager: Default
+[21:57:24] [Sound Library Loader/INFO]: Sound engine started
+[21:57:25] [Client thread/INFO]: Created: 512x256 textures/blocks-atlas
+[21:57:25] [Client thread/INFO]: Created: 256x256 textures/items-atlas
+[21:57:27] [MCO Availability Checker #1/ERROR]: Couldn't connect to Realms
+[21:57:29] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:57:31] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:57:31] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:music.menu
+[21:57:35] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:57:36] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:57:38] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:57:39] [Server thread/INFO]: Starting integrated minecraft server version 1.7.2
+[21:57:39] [Server thread/INFO]: Generating keypair
+[21:57:39] [Server thread/INFO]: Converting map!
+[21:57:39] [Server thread/INFO]: Scanning folders...
+[21:57:39] [Server thread/INFO]: Total conversion count is 0
+[21:57:39] [Server thread/INFO]: Preparing start region for level 0
+[21:57:40] [Server thread/INFO]: Preparing spawn area: 9%
+[21:57:41] [Server thread/INFO]: Preparing spawn area: 24%
+[21:57:42] [Server thread/INFO]: Preparing spawn area: 40%
+[21:57:43] [Server thread/INFO]: Preparing spawn area: 56%
+[21:57:44] [Server thread/INFO]: Preparing spawn area: 73%
+[21:57:46] [Server thread/INFO]: Preparing spawn area: 91%
+[21:57:47] [Server thread/INFO]: vcvxcvxcv[local:E:b0ebef74] logged in with entity id 281 at (27.5, 70.0, 253.5)
+[21:57:47] [Server thread/INFO]: vcvxcvxcv joined the game
+[21:57:47] [Server thread/INFO]: Saving and pausing game...
+[21:57:47] [Server thread/INFO]: Saving chunks for level 'New World'/Overworld
+[21:57:50] [Server thread/INFO]: Saving chunks for level 'New World'/Nether
+[21:57:50] [Server thread/INFO]: Saving chunks for level 'New World'/The End
+[21:57:50] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 2326ms behind, skipping 46 tick(s)
+[21:58:05] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:gui.button.press
+[21:58:05] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:mob.bat.takeoff
+[21:58:05] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:mob.bat.takeoff
+[21:58:05] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:minecart.base
+[21:58:05] [Client thread/WARN]: Unable to play unknown soundEvent: minecraft:minecart.base
+[21:58:13] [Server thread/INFO]: <vcvxcvxcv> gg
+[21:58:13] [Client thread/INFO]: [CHAT] <vcvxcvxcv> gg
+[21:58:16] [Server thread/INFO]: Saving and pausing game...
+[21:58:16] [Server thread/INFO]: Saving chunks for level 'New World'/Overworld
+[21:58:16] [Server thread/INFO]: Saving chunks for level 'New World'/Nether
+[21:58:16] [Server thread/INFO]: Saving chunks for level 'New World'/The End
+[21:58:17] [Client thread/INFO]: Stopping!
+[21:58:17] [Server thread/INFO]: Stopping server
+[21:58:17] [Server thread/INFO]: Saving players
+[21:58:17] [Server thread/INFO]: Saving worlds
+[21:58:17] [Server thread/INFO]: Saving chunks for level 'New World'/Overworld

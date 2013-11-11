@@ -36,7 +36,7 @@ public class TunnelManager extends JPanel implements Runnable {
         while (this.thread == thisThread) {
             // is the tunnel running?
             // if not start it
-            thisThread.sleep(500);
+            // thisThread.sleep(500);
         }
     }
 
@@ -44,5 +44,7 @@ public class TunnelManager extends JPanel implements Runnable {
         if (interval <= maxinter) {
             return interval * 2;
         }
+        
+        return interval;
     }
 }
