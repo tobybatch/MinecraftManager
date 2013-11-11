@@ -13,20 +13,28 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
  * @author tobias
  */
-public class MinecraftManager extends JPanel implements ActionListener, DebugEnabled {
+public class MinecraftManager extends JPanel implements Runnable, ActionListener, DebugEnabled {
     
     public static final String VERSION = "1.7.2";
+
     protected JTextArea txtDebug;
     protected JTextField runText;
+
+    protected static File home = null;
+    protected static File config = null;
+    protected static File appdata = null;
+    protected static File version = null;
+    protected static File natives = null;
+
+    private Thread thread = null;
     
     public MinecraftManager() {
-        
         this.setLayout(new BorderLayout());
         this.setBorder(new EmptyBorder(10,10,10,10));
         
@@ -65,43 +73,86 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         runMinecraft();
     }
     
-    protected File getAppData(File home) {
-        
-        String appdata = "";
-        if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
-            appdata = File.separator + "AppData\\Roaming";
-            this.debug("Adding windows custom AppData path");
+    public static File getHome() {
+        if (MinecraftManager.home == null) {
+            MinecraftManager.home = new File(System.getProperty("user.home"));
+        }
+
+        return MinecraftManager.home;
+    }
+
+    public static File getConfig(String filename) {
+        if (MinecraftManager.config == null) {
+            File appData = MinecraftManager.getAppData();
+            File configDir = new File(appData, filename);
+            if (!configDir.isDirectory()) {
+                configDir.mkdir();
+            }
+            File config = new File(configDir, filename);
+            MinecraftManager.config = config;
+        }
+
+        return MinecraftManager.config;
+    }
+
+    public static File getAppData() {
+        if (MinecraftManager.appdata == null) {
+            File appdata = MinecraftManager.getHome();
+            if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
+                appdata = new File(appdata, "AppData\\Roaming");
+            }
+            MinecraftManager.appdata = appdata;
         }
         
-        File versiondir = new File(
-                home,
-                appdata
+        return MinecraftManager.appdata;
+    }
+
+    public static File getVersionDir() {
+        if (MinecraftManager.version == null) {
+            MinecraftManager.version = new File(
+                MinecraftManager.getHome(),
+                MinecraftManager.getAppData()
                 + File.separator + ".minecraft"
                 + File.separator + "versions"
-                + File.separator + VERSION
-        );
-        
-        return versiondir;
+                + File.separator + MinecraftManager.VERSION
+            );
+        }
+
+        return MinecraftManager.version;
+    }
+
+    public static File getNativesDir() {
+        if (MinecraftManager.natives == null) {
+            MinecraftManager.natives = new File(
+                MinecraftManager.getVersionDir(),
+                MinecraftManager.VERSION + "-natives"
+            );
+        }
+
+        return MinecraftManager.natives;
     }
     
     protected void runMinecraft() {
-        File home = new File(System.getProperty("user.home"));
+        File home = MinecraftManager.getHome();
         this.debug("Home space found at " + home);
-        
-        File versiondir = this.getAppData(home);
-        File natives = new File(versiondir, VERSION + "-natives");
-        this.debug("Looking for natives at " + versiondir);
+        File appdata = MinecraftManager.getAppData();
+        this.debug("AppData found at " + appdata);
+        File version = MinecraftManager.getVersionDir();
+        this.debug("Versions dir found at " + version);
+        File natives = MinecraftManager.getNativesDir();
+        this.debug("Looking for natives at " + version);
         
         if (!natives.exists() || !natives.isDirectory()) {
             this.debug("No natives found");
-            if (!this.install(versiondir, natives)) {
-                return;
-            }
+            this.start();
+            return;
         }
+
+        this.execMC();
+    }
         
-        String cli = this.getCli(home, versiondir, natives).replace(
-                "USERNAME", this.runText.getText()
-        );
+    public void execMC() {
+        String cli = this.getCli();
         this.debug(cli);
         
         try {
@@ -113,7 +164,9 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         }
     }
     
-    public boolean install(File versiondir, File natives) {
+    public boolean install() {
+        File natives = MinecraftManager.getNativesDir();
+
         Component frame = this;
         while (!(frame instanceof Frame)) {
             frame = frame.getParent();
@@ -139,7 +192,12 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         this.txtDebug.setText(text + message + "\n");
     }
     
-    public String getCli(File home, File versions, File natives) {
+    public String getCli() {
+        File home = MinecraftManager.getHome();
+        File appdata = MinecraftManager.getAppData();
+        File version = MinecraftManager.getVersionDir();
+        File natives = MinecraftManager.getNativesDir();
+        
         String OS = System.getProperty("os.name").toLowerCase();
         
         String jarpath = this.walk(
@@ -160,7 +218,7 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
                 + "-Djava.library.path=" + natives.toString() + " "
                 + "-cp " + jarpath
                 + " net.minecraft.client.main.Main "
-                + "--username USERNAME "
+                + "--username " + this.runText.getText() + " "
                 + "--version " + VERSION + " "
                 + "--gameDir " + home + "/.minecraft "
                 + "--assetsDir " + home + "/.minecraft/assets "
@@ -187,6 +245,31 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         return jarpath;
     }
     
+    public void start() {
+        this.thread = new Thread(this);
+        this.debug("Starting search for natives");
+        this.thread.start();
+    }
+
+    public void run() {
+        Thread thisThread = Thread.currentThread();
+
+        while (this.thread == thisThread) {
+            if (this.install()) {
+                thisThread = null;
+                this.execMC();
+            } else {
+                this.debug("Main thread waiting.");
+                try {
+                    thisThread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Logger.getLogger(Installer.class.getName()).log(Level.SEVERE, null, e);
+                }
+            }
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -200,5 +283,4 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         frame.setSize(640, 480);
         frame.setVisible(true);
     }
-    
 }
