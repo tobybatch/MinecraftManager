@@ -1,16 +1,10 @@
 package uk.co.tobybatch.minecraftmanager;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -26,8 +20,8 @@ public class Installer extends javax.swing.JDialog implements Runnable{
     protected volatile Thread thread = null;
     protected JLabel feedback;
     
-    private File natives;
-    private DebugEnabled debugger;
+    private final File natives;
+    private final DebugEnabled debugger;
     private boolean sucess = false;
     
     public Installer(Frame owner, File natives, DebugEnabled debugger) {

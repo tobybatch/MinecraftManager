@@ -6,14 +6,13 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -73,9 +72,13 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
             this.debug("Adding windows custom AppData path");
         }
         
+        return new File(home, appdata);
+    }
+        
+    protected File getVersionsDir(File home, File appdata) {
         File versiondir = new File(
                 home,
-                appdata
+                appdata.toString()
                 + File.separator + ".minecraft"
                 + File.separator + "versions"
                 + File.separator + VERSION
@@ -88,7 +91,8 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         File home = new File(System.getProperty("user.home"));
         this.debug("Home space found at " + home);
         
-        File versiondir = this.getAppData(home);
+        File appdata = this.getAppData(home);
+        File versiondir = this.getVersionsDir(home, appdata);
         File natives = new File(versiondir, VERSION + "-natives");
         this.debug("Looking for natives at " + versiondir);
         
@@ -99,7 +103,7 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
             }
         }
         
-        String cli = this.getCli(home, versiondir, natives).replace(
+        String cli = this.getCli(appdata, versiondir, natives).replace(
                 "USERNAME", this.runText.getText()
         );
         this.debug(cli);
@@ -143,7 +147,7 @@ public class MinecraftManager extends JPanel implements ActionListener, DebugEna
         String OS = System.getProperty("os.name").toLowerCase();
         
         String jarpath = this.walk(
-                new File(home, ".minecraft" + File.separator + "libraries")
+                new File(versions, ".minecraft" + File.separator + "libraries")
         );
         jarpath += File.pathSeparator + new File(
                 home,
