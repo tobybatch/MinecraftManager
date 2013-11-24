@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -104,6 +103,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
             MinecraftManager.appdata = appdata;
         }
         
+<<<<<<< HEAD
         return MinecraftManager.appdata;
     }
 
@@ -112,6 +112,15 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
             MinecraftManager.version = new File(
                 MinecraftManager.getHome(),
                 MinecraftManager.getAppData()
+=======
+        return new File(home, appdata);
+    }
+        
+    protected File getVersionsDir(File home, File appdata) {
+        File versiondir = new File(
+                home,
+                appdata.toString()
+>>>>>>> da5b7b173817e5748900768b09c32b0ba6778a17
                 + File.separator + ".minecraft"
                 + File.separator + "versions"
                 + File.separator + MinecraftManager.VERSION
@@ -135,12 +144,20 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
     protected void runMinecraft() {
         File home = MinecraftManager.getHome();
         this.debug("Home space found at " + home);
+<<<<<<< HEAD
         File appdata = MinecraftManager.getAppData();
         this.debug("AppData found at " + appdata);
         File version = MinecraftManager.getVersionDir();
         this.debug("Versions dir found at " + version);
         File natives = MinecraftManager.getNativesDir();
         this.debug("Looking for natives at " + version);
+=======
+        
+        File appdata = this.getAppData(home);
+        File versiondir = this.getVersionsDir(home, appdata);
+        File natives = new File(versiondir, VERSION + "-natives");
+        this.debug("Looking for natives at " + versiondir);
+>>>>>>> da5b7b173817e5748900768b09c32b0ba6778a17
         
         if (!natives.exists() || !natives.isDirectory()) {
             this.debug("No natives found");
@@ -151,8 +168,14 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         this.execMC();
     }
         
+<<<<<<< HEAD
     public void execMC() {
         String cli = this.getCli();
+=======
+        String cli = this.getCli(appdata, versiondir, natives).replace(
+                "USERNAME", this.runText.getText()
+        );
+>>>>>>> da5b7b173817e5748900768b09c32b0ba6778a17
         this.debug(cli);
         
         try {
@@ -201,7 +224,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         String OS = System.getProperty("os.name").toLowerCase();
         
         String jarpath = this.walk(
-                new File(home, ".minecraft" + File.separator + "libraries")
+                new File(versions, ".minecraft" + File.separator + "libraries")
         );
         jarpath += File.pathSeparator + new File(
                 home,
