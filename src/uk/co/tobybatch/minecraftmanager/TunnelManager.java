@@ -1,6 +1,8 @@
 package uk.co.tobybatch.minecraftmanager;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class TunnelManager extends JPanel implements Runnable {
@@ -34,9 +36,13 @@ public class TunnelManager extends JPanel implements Runnable {
         Thread thisThread = Thread.currentThread();
 
         while (this.thread == thisThread) {
-            // is the tunnel running?
-            // if not start it
-            thisThread.sleep(500);
+            try {
+                // is the tunnel running?
+                // if not start it
+                thisThread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TunnelManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -44,5 +50,7 @@ public class TunnelManager extends JPanel implements Runnable {
         if (interval <= maxinter) {
             return interval * 2;
         }
+        
+        return interval;
     }
 }
