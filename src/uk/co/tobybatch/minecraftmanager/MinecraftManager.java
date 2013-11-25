@@ -209,7 +209,7 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
         );
         this.debug(jarpath);
         
-        String javaPath = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        String javaPath = this.findJavaExe();
         if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
             javaPath = "\"" + javaPath + "\"";
         }
@@ -225,6 +225,37 @@ public class MinecraftManager extends JPanel implements Runnable, ActionListener
                 + "--assetsDir " + home + "/.minecraft/assets "
                 + " --uuid " + UUID.randomUUID() + " "
                 + "--accessToken invalid";
+    }
+    
+    public String findJavaExe() {
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
+            try {
+                String [] javaws = Finder.find(Paths.get(System.getenv("ProgramFiles")), "javaw.exe");
+                if (javaws.length > 0) {
+                    return javaws[0];
+                }
+                
+                String [] javas = Finder.find(Paths.get(System.getenv("ProgramFiles")), "java.exe");
+                if (javas.length > 0) {
+                    return javas[0];
+                }
+
+                String [] jres = Finder.find(Paths.get(System.getenv("ProgramFiles")), "jre.exe");
+                if (jres.length > 0) {
+                    return jres[0];
+                }
+            } catch (IOException ex) {
+                this.debug(ex.getMessage());
+                ex.printStackTrace();
+                Logger.getLogger(
+                        MinecraftManager.class.getName()).log(Level.SEVERE, null, ex
+                );
+            }
+        } else {
+            return System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        }
+        
+        return null;
     }
     
     public String walk(File path) {
